@@ -114,13 +114,19 @@ export default function AdminDashboard() {
         const data = await res.json();
         
         if (data.secure_url) {
+          // Inject f_auto,q_auto to convert HEIC to web-safe formats (WebP/JPEG) and optimize size
+          let optimizedUrl = data.secure_url;
+          if (optimizedUrl.includes('/upload/')) {
+            optimizedUrl = optimizedUrl.replace('/upload/', '/upload/f_auto,q_auto/');
+          }
+
           // Save to Firestore
           const docRef = await addDoc(collection(db, 'gallery_images'), {
-            url: data.secure_url,
+            url: optimizedUrl,
             createdAt: serverTimestamp()
           });
           
-          newImages.push({ id: docRef.id, url: data.secure_url });
+          newImages.push({ id: docRef.id, url: optimizedUrl });
         }
       } catch (err) {
         console.error("Upload error for file", file?.name, err);
@@ -268,7 +274,7 @@ export default function AdminDashboard() {
               <div>
                 <input 
                   type="file" 
-                  accept="image/*" 
+                  accept="image/*,.heic,.HEIC" 
                   multiple
                   className="hidden" 
                   ref={fileInputRef} 
