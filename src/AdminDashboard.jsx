@@ -17,6 +17,7 @@ export default function AdminDashboard() {
   const [uploading, setUploading] = useState(false);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
+  const hasMigrated = useRef(false);
 
   // Fetch Inquiries
   const fetchInquiries = async () => {
@@ -48,6 +49,13 @@ export default function AdminDashboard() {
         ...doc.data()
       }));
       setGallery(data);
+
+      // Auto-migrate if the database is completely empty
+      if (data.length === 0 && !hasMigrated.current) {
+        hasMigrated.current = true;
+        console.log("Empty gallery detected, automatically migrating old images...");
+        handleAutoMigrate();
+      }
     } catch (err) {
       console.error("Error fetching gallery:", err);
     } finally {
@@ -127,6 +135,54 @@ export default function AdminDashboard() {
       setUploading(false);
       if (fileInputRef.current) fileInputRef.current.value = "";
     }
+  };
+
+  const handleAutoMigrate = async () => {
+    const imagesToMigrate = [
+      "/images/work/IMG_6264.jpg",
+      "/images/work/IMG_6265.jpg",
+      "/images/work/IMG_6282.jpg",
+      "/images/work/IMG_6293.jpg",
+      "/images/work/IMG_7026.jpg",
+      "/images/work/IMG_7141.JPG.jpeg",
+      "/images/work/IMG_7459.jpg",
+      "/images/work/IMG_7462.jpg",
+      "/images/work/IMG_7478.jpg",
+      "/images/work/IMG_7482.jpg",
+      "/images/work/IMG_7483.jpg"
+    ];
+
+    setUploading(true);
+    let newImages = [];
+    for (const imgPath of imagesToMigrate) {
+      try {
+        const response = await fetch(imgPath);
+        const blob = await response.blob();
+        
+        const formData = new FormData();
+        formData.append("file", blob);
+        formData.append("upload_preset", "website");
+        formData.append("cloud_name", "ndpct9uz");
+
+        const res = await fetch("https://api.cloudinary.com/v1_1/ndpct9uz/image/upload", {
+          method: "POST",
+          body: formData
+        });
+        const data = await res.json();
+        
+        if (data.secure_url) {
+          const docRef = await addDoc(collection(db, 'gallery_images'), {
+            url: data.secure_url,
+            createdAt: serverTimestamp()
+          });
+          newImages.push({ id: docRef.id, url: data.secure_url });
+        }
+      } catch (err) {
+        console.error("Migration error for", imgPath, err);
+      }
+    }
+    setUploading(false);
+    setGallery(prev => [...newImages, ...prev]);
   };
 
   const handleDeleteImage = async (id) => {
