@@ -12,7 +12,6 @@ export default function Gallery() {
   const [bgVideoUrls, setBgVideoUrls] = useState([
     "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260611_183632_c311af08-e4b7-458f-81e7-79847a49b3d3.mp4"
   ]);
-  const [currentVideoIndex, setCurrentVideoIndex] = useState(0);
 
   useEffect(() => {
     const fetchSettingsAndImages = async () => {
@@ -56,50 +55,15 @@ export default function Gallery() {
     fetchSettingsAndImages();
   }, []);
 
-  // Auto-rotate background videos every 15 seconds
-  useEffect(() => {
-    if (bgVideoUrls.length <= 1) return;
-    
-    const interval = setInterval(() => {
-      setCurrentVideoIndex((prev) => (prev + 1) % bgVideoUrls.length);
-    }, 15000);
-    
-    return () => clearInterval(interval);
-  }, [bgVideoUrls.length]);
-
-  const currentVideo = bgVideoUrls[currentVideoIndex];
-  const isYouTube = currentVideo?.includes('youtube.com') || currentVideo?.includes('youtu.be');
   const getYouTubeId = (url) => {
     if (!url) return null;
     const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
     const match = url.match(regExp);
     return match ? match[1] : null;
   };
-  const ytId = isYouTube ? getYouTubeId(currentVideo) : null;
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-black font-sora">
-      {/* Background Video (Keyed by index so it fully re-mounts on switch) */}
-      <div key={currentVideoIndex} className="absolute inset-0 z-0">
-        {isYouTube ? (
-          ytId ? (
-            <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden bg-black">
-              <iframe 
-                src={`https://www.youtube.com/embed/${ytId}?autoplay=1&loop=1&mute=1&playlist=${ytId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1`}
-                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200vw] h-[200vh] min-w-full min-h-full object-cover opacity-80"
-                allow="autoplay; encrypted-media"
-                frameBorder="0"
-              />
-            </div>
-          ) : (
-            <div className="absolute inset-0 bg-black flex items-center justify-center">
-              <span className="text-white/30 text-sm">Invalid YouTube Link</span>
-            </div>
-          )
-        ) : currentVideo ? (
-          <BoomerangVideoBg src={currentVideo} />
-        ) : null}
-      </div>
       
       {/* Dark gradient overlay so images pop more against the video */}
       <div className="absolute inset-0 z-0 bg-black/60 pointer-events-none" />
@@ -127,6 +91,36 @@ export default function Gallery() {
             </div>
           ) : (
             <div className="columns-1 sm:columns-2 lg:columns-3 gap-6 space-y-6">
+              {/* Render Videos First */}
+              {bgVideoUrls.map((vidUrl, index) => {
+                if (!vidUrl) return null;
+                const isYouTube = vidUrl.includes('youtube.com') || vidUrl.includes('youtu.be');
+                const ytId = isYouTube ? getYouTubeId(vidUrl) : null;
+                
+                return (
+                  <motion.div 
+                    key={`video-${index}`}
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true, margin: "-50px" }}
+                    transition={{ duration: 0.6, delay: index * 0.1 }}
+                    className="break-inside-avoid relative group rounded-2xl overflow-hidden bg-white/5 border border-white/10 aspect-video mb-6"
+                  >
+                    {isYouTube && ytId ? (
+                      <iframe 
+                        src={`https://www.youtube.com/embed/${ytId}?autoplay=1&loop=1&mute=1&playlist=${ytId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1`}
+                        className="w-full h-full object-cover"
+                        allow="autoplay; encrypted-media"
+                        frameBorder="0"
+                      />
+                    ) : !isYouTube ? (
+                      <BoomerangVideoBg src={vidUrl} />
+                    ) : null}
+                  </motion.div>
+                );
+              })}
+
+              {/* Render Images */}
               {images.map((img, index) => (
                 <motion.div 
                   key={index}
