@@ -15,8 +15,6 @@ import "swiper/css";
 import Gallery from "./Gallery";
 import StartProject from "./StartProject";
 
-const Spline = React.lazy(() => import('@splinetool/react-spline'));
-
 function cn(...inputs) {
   return twMerge(clsx(inputs));
 }
@@ -94,25 +92,8 @@ function HeroSection() {
 
   return (
     <section className="relative min-h-screen flex items-center md:items-end bg-hero-bg overflow-hidden">
-      {/* Spline 3D Background - Desktop Only for Performance */}
-      <div 
-        className="absolute inset-0 pointer-events-none md:pointer-events-auto"
-        onWheelCapture={(e) => {
-          // Force page scroll when wheeling over the 3D canvas
-          window.scrollBy({ top: e.deltaY, behavior: 'auto' });
-        }}
-      >
-        {!isMobile ? (
-          <Suspense fallback={<div className="absolute inset-0 bg-hero-bg" />}>
-            <Spline
-              scene="https://prod.spline.design/Slk6b8kz3LRlKiyk/scene.splinecode"
-              className="w-full h-full"
-            />
-          </Suspense>
-        ) : (
-          <div className="absolute inset-0 bg-hero-bg opacity-100 overflow-hidden" />
-        )}
-      </div>
+      {/* Background */}
+      <div className="absolute inset-0 bg-hero-bg opacity-100 overflow-hidden" />
       
       {/* Dark overlay */}
       <div className="absolute inset-0 bg-black/30 z-[1] pointer-events-none" />
