@@ -93,41 +93,47 @@ export default function AdminDashboard() {
 
   // --- Gallery Handlers ---
   const handleUploadImage = async (e) => {
-    const file = e.target.files?.[0];
-    if (!file) return;
+    const files = Array.from(e.target.files || []);
+    if (files.length === 0) return;
 
     setUploading(true);
-    
-    // Cloudinary Unsigned Upload
-    const formData = new FormData();
-    formData.append("file", file);
-    formData.append("upload_preset", "website");
-    formData.append("cloud_name", "ndpct9uz");
+    let newImages = [];
 
-    try {
-      const res = await fetch("https://api.cloudinary.com/v1_1/ndpct9uz/image/upload", {
-        method: "POST",
-        body: formData
-      });
-      const data = await res.json();
-      
-      if (data.secure_url) {
-        // Save to Firestore
-        const docRef = await addDoc(collection(db, 'gallery_images'), {
-          url: data.secure_url,
-          createdAt: serverTimestamp()
+    for (const file of files) {
+      // Cloudinary Unsigned Upload
+      const formData = new FormData();
+      formData.append("file", file);
+      formData.append("upload_preset", "website");
+      formData.append("cloud_name", "ndpct9uz");
+
+      try {
+        const res = await fetch("https://api.cloudinary.com/v1_1/ndpct9uz/image/upload", {
+          method: "POST",
+          body: formData
         });
+        const data = await res.json();
         
-        // Update local state so it appears immediately
-        setGallery([{ id: docRef.id, url: data.secure_url }, ...gallery]);
+        if (data.secure_url) {
+          // Save to Firestore
+          const docRef = await addDoc(collection(db, 'gallery_images'), {
+            url: data.secure_url,
+            createdAt: serverTimestamp()
+          });
+          
+          newImages.push({ id: docRef.id, url: data.secure_url });
+        }
+      } catch (err) {
+        console.error("Upload error for file", file.name, err);
       }
-    } catch (err) {
-      console.error("Upload error:", err);
-      alert("Failed to upload image to Cloudinary.");
-    } finally {
-      setUploading(false);
-      if (fileInputRef.current) fileInputRef.current.value = "";
     }
+    
+    // Update local state with all successfully uploaded images
+    if (newImages.length > 0) {
+      setGallery(prev => [...newImages, ...prev]);
+    }
+
+    setUploading(false);
+    if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
   const handleMigrate = async () => {
@@ -321,6 +327,7 @@ export default function AdminDashboard() {
                 <input 
                   type="file" 
                   accept="image/*" 
+                  multiple
                   className="hidden" 
                   ref={fileInputRef} 
                   onChange={handleUploadImage}
