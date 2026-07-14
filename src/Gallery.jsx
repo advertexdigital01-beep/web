@@ -1,5 +1,5 @@
 import React, { useState, useEffect } from 'react';
-import { collection, query, orderBy, getDocs } from 'firebase/firestore';
+import { collection, query, orderBy, getDocs, doc, getDoc } from 'firebase/firestore';
 import { db } from './lib/firebase';
 import { motion } from 'framer-motion';
 import { ArrowLeftIcon } from 'lucide-react';
@@ -9,10 +9,19 @@ import BoomerangVideoBg from './BoomerangVideoBg';
 export default function Gallery() {
   const [images, setImages] = useState([]);
   const [loading, setLoading] = useState(true);
+  const [bgVideoUrl, setBgVideoUrl] = useState("https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260611_183632_c311af08-e4b7-458f-81e7-79847a49b3d3.mp4");
 
   useEffect(() => {
-    const fetchImages = async () => {
+    const fetchSettingsAndImages = async () => {
       try {
+        // Fetch Video URL Settings
+        const docRef = doc(db, 'site_settings', 'gallery');
+        const docSnap = await getDoc(docRef);
+        if (docSnap.exists() && docSnap.data().backgroundVideoUrl) {
+          setBgVideoUrl(docSnap.data().backgroundVideoUrl);
+        }
+
+        // Fetch Gallery Images
         const q = query(collection(db, 'gallery_images'), orderBy('createdAt', 'desc'));
         const snapshot = await getDocs(q);
         const data = snapshot.docs.map(doc => ({
@@ -30,21 +39,38 @@ export default function Gallery() {
           ]);
         }
       } catch (err) {
-        console.error("Error fetching gallery images:", err);
+        console.error("Error fetching gallery data:", err);
       } finally {
         setLoading(false);
       }
     };
     
-    fetchImages();
+    fetchSettingsAndImages();
   }, []);
 
-  const videoUrl = "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260611_183632_c311af08-e4b7-458f-81e7-79847a49b3d3.mp4";
+  const isYouTube = bgVideoUrl.includes('youtube.com') || bgVideoUrl.includes('youtu.be');
+  const getYouTubeId = (url) => {
+    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const match = url.match(regExp);
+    return (match && match[2].length === 11) ? match[2] : null;
+  };
+  const ytId = isYouTube ? getYouTubeId(bgVideoUrl) : null;
 
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-black font-sora">
-      {/* Custom Boomerang Video Loop Background */}
-      <BoomerangVideoBg src={videoUrl} />
+      {/* Background Video */}
+      {isYouTube && ytId ? (
+        <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden z-0 bg-black">
+          <iframe 
+            src={`https://www.youtube.com/embed/${ytId}?autoplay=1&loop=1&mute=1&playlist=${ytId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1`}
+            className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200vw] h-[200vh] min-w-full min-h-full object-cover opacity-80"
+            allow="autoplay; encrypted-media"
+            frameBorder="0"
+          />
+        </div>
+      ) : (
+        <BoomerangVideoBg src={bgVideoUrl} />
+      )}
       
       {/* Dark gradient overlay so images pop more against the video */}
       <div className="absolute inset-0 z-0 bg-black/60 pointer-events-none" />

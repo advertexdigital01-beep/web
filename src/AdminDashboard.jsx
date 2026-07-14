@@ -1,5 +1,5 @@
 import React, { useEffect, useState, useRef } from 'react';
-import { collection, query, orderBy, getDocs, deleteDoc, doc, updateDoc, addDoc, serverTimestamp } from 'firebase/firestore';
+import { collection, query, orderBy, getDocs, deleteDoc, doc, updateDoc, addDoc, serverTimestamp, setDoc, getDoc } from 'firebase/firestore';
 import { signOut } from 'firebase/auth';
 import { db, auth } from './lib/firebase';
 import { useNavigate } from 'react-router-dom';
@@ -19,6 +19,9 @@ export default function AdminDashboard() {
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
   const hasMigrated = useRef(false);
+
+  const [videoUrl, setVideoUrl] = useState('');
+  const [savingVideo, setSavingVideo] = useState(false);
 
   // Fetch Inquiries
   const fetchInquiries = async () => {
@@ -57,9 +60,23 @@ export default function AdminDashboard() {
     }
   };
 
+  // Fetch Settings (Video URL)
+  const fetchSettings = async () => {
+    try {
+      const docRef = doc(db, 'site_settings', 'gallery');
+      const docSnap = await getDoc(docRef);
+      if (docSnap.exists()) {
+        setVideoUrl(docSnap.data().backgroundVideoUrl || '');
+      }
+    } catch (err) {
+      console.error("Error fetching settings:", err);
+    }
+  };
+
   useEffect(() => {
     fetchInquiries();
     fetchGallery();
+    fetchSettings();
   }, []);
 
   const handleLogout = async () => {
@@ -175,8 +192,24 @@ export default function AdminDashboard() {
         setGallery(gallery.filter(img => img.id !== id));
       } catch (err) {
         console.error("Error deleting image:", err);
+        alert(`Failed to delete: ${err.message}`);
       }
     }
+  };
+
+  const handleSaveVideo = async () => {
+    setSavingVideo(true);
+    try {
+      await setDoc(doc(db, 'site_settings', 'gallery'), {
+        backgroundVideoUrl: videoUrl,
+        updatedAt: serverTimestamp()
+      }, { merge: true });
+      alert("Background video URL saved successfully!");
+    } catch (err) {
+      console.error("Error saving video URL:", err);
+      alert(`Failed to save video URL: ${err.message}. If this says missing permissions, please update your Firebase Rules for site_settings!`);
+    }
+    setSavingVideo(false);
   };
 
   return (
@@ -289,12 +322,38 @@ export default function AdminDashboard() {
 
         {/* Tab Content: GALLERY */}
         {activeTab === 'gallery' && (
-          <div className="space-y-6">
-            <div className="flex justify-between items-end">
-              <div>
-                <h2 className="text-xl font-medium text-white mb-1">Our Work Gallery</h2>
-                <p className="text-sm text-gray-400">Upload new images to Cloudinary to display on the website.</p>
+          <div className="space-y-10">
+            {/* Background Video Section */}
+            <div className="bg-[#151515] p-6 rounded-2xl border border-white/5">
+              <h2 className="text-xl font-medium text-white mb-2">Highlight Background Video</h2>
+              <p className="text-sm text-gray-400 mb-4">
+                Paste a YouTube URL or a direct video link (.mp4). This video will play silently at the very top of the Our Work page.
+              </p>
+              <div className="flex gap-4">
+                <input 
+                  type="text" 
+                  value={videoUrl}
+                  onChange={(e) => setVideoUrl(e.target.value)}
+                  placeholder="https://www.youtube.com/watch?v=..."
+                  className="flex-1 bg-black border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 transition-colors"
+                />
+                <button 
+                  onClick={handleSaveVideo}
+                  disabled={savingVideo}
+                  className="bg-blue-600 text-white px-8 py-3 rounded-xl font-medium hover:bg-blue-700 transition-colors disabled:opacity-70 flex items-center justify-center min-w-[120px]"
+                >
+                  {savingVideo ? <Loader2 size={18} className="animate-spin" /> : 'Save Video'}
+                </button>
               </div>
+            </div>
+
+            {/* Gallery Images Section */}
+            <div>
+              <div className="flex justify-between items-end mb-6">
+                <div>
+                  <h2 className="text-xl font-medium text-white mb-1">Our Work Gallery Grid</h2>
+                  <p className="text-sm text-gray-400">Upload new images to Cloudinary to display on the website.</p>
+                </div>
               
               <div>
                 <input 
