@@ -594,7 +594,6 @@ function OurWorkSection() {
           />
         )}
       </div>
-      </div>
     </section>
   );
 }
