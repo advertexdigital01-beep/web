@@ -62,6 +62,12 @@ export default function Gallery() {
     return match ? match[1] : null;
   };
 
+  const getDriveId = (url) => {
+    if (!url) return null;
+    const match = url.match(/\/file\/d\/([a-zA-Z0-9_-]+)/);
+    return match ? match[1] : null;
+  };
+
   const oldBgUrl = "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260611_183632_c311af08-e4b7-458f-81e7-79847a49b3d3.mp4";
 
   return (
@@ -101,7 +107,10 @@ export default function Gallery() {
               {bgVideoUrls.map((vidUrl, index) => {
                 if (!vidUrl) return null;
                 const isYouTube = vidUrl.includes('youtube.com') || vidUrl.includes('youtu.be');
+                const isDrive = vidUrl.includes('drive.google.com');
+                
                 const ytId = isYouTube ? getYouTubeId(vidUrl) : null;
+                const driveId = isDrive ? getDriveId(vidUrl) : null;
                 
                 return (
                   <motion.div 
@@ -119,7 +128,14 @@ export default function Gallery() {
                         allow="autoplay; encrypted-media"
                         frameBorder="0"
                       />
-                    ) : !isYouTube ? (
+                    ) : isDrive && driveId ? (
+                      <iframe 
+                        src={`https://drive.google.com/file/d/${driveId}/preview`}
+                        className="w-full h-full object-cover"
+                        allow="autoplay; encrypted-media"
+                        frameBorder="0"
+                      />
+                    ) : !isYouTube && !isDrive ? (
                       <BoomerangVideoBg src={vidUrl} />
                     ) : null}
                   </motion.div>
