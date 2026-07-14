@@ -85,37 +85,16 @@ function Navbar() {
 }
 
 function HeroSection() {
-  const [isMobile, setIsMobile] = React.useState(
-    typeof window !== 'undefined' ? window.innerWidth < 768 : false
-  );
-
-  React.useEffect(() => {
-    const checkMobile = () => {
-      setIsMobile(window.innerWidth < 768);
-    };
-    window.addEventListener('resize', checkMobile);
-    return () => window.removeEventListener('resize', checkMobile);
-  }, []);
-
   return (
     <section className="relative min-h-screen flex items-center md:items-end bg-hero-bg overflow-hidden">
       {/* Spline 3D Background */}
       <div className="absolute inset-0 pointer-events-none">
-        {!isMobile ? (
-          <Suspense fallback={<div className="absolute inset-0 bg-hero-bg" />}>
-            <Spline
-              scene="https://prod.spline.design/Slk6b8kz3LRlKiyk/scene.splinecode"
-              className="w-full h-full pointer-events-none"
-            />
-          </Suspense>
-        ) : (
-          <div className="absolute inset-0 bg-[#0a0a0a] overflow-hidden flex items-center justify-center">
-            {/* Extremely lightweight CSS animation for mobile */}
-            <div className="absolute top-[10%] left-[5%] w-[70vw] h-[70vw] bg-green-500/20 rounded-full filter blur-[80px] animate-blob" />
-            <div className="absolute top-[40%] right-[5%] w-[60vw] h-[60vw] bg-blue-500/20 rounded-full filter blur-[80px] animate-blob" style={{ animationDelay: '2s' }} />
-            <div className="absolute bottom-[10%] left-[20%] w-[80vw] h-[80vw] bg-purple-500/20 rounded-full filter blur-[80px] animate-blob" style={{ animationDelay: '4s' }} />
-          </div>
-        )}
+        <Suspense fallback={<div className="absolute inset-0 bg-hero-bg" />}>
+          <Spline
+            scene="https://prod.spline.design/Slk6b8kz3LRlKiyk/scene.splinecode"
+            className="w-full h-full pointer-events-none"
+          />
+        </Suspense>
       </div>
       
       {/* Dark overlay */}
