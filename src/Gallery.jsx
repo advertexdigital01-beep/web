@@ -71,9 +71,9 @@ export default function Gallery() {
   const isYouTube = currentVideo?.includes('youtube.com') || currentVideo?.includes('youtu.be');
   const getYouTubeId = (url) => {
     if (!url) return null;
-    const regExp = /^.*(youtu.be\/|v\/|u\/\w\/|embed\/|watch\?v=|&v=)([^#&?]*).*/;
+    const regExp = /(?:youtube\.com\/(?:[^\/]+\/.+\/|(?:v|e(?:mbed)?|shorts)\/|.*[?&]v=)|youtu\.be\/)([^"&?\/\s]{11})/i;
     const match = url.match(regExp);
-    return (match && match[2].length === 11) ? match[2] : null;
+    return match ? match[1] : null;
   };
   const ytId = isYouTube ? getYouTubeId(currentVideo) : null;
 
@@ -81,18 +81,24 @@ export default function Gallery() {
     <div className="relative min-h-screen w-full overflow-hidden bg-black font-sora">
       {/* Background Video (Keyed by index so it fully re-mounts on switch) */}
       <div key={currentVideoIndex} className="absolute inset-0 z-0">
-        {isYouTube && ytId ? (
-          <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden bg-black">
-            <iframe 
-              src={`https://www.youtube.com/embed/${ytId}?autoplay=1&loop=1&mute=1&playlist=${ytId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1`}
-              className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200vw] h-[200vh] min-w-full min-h-full object-cover opacity-80"
-              allow="autoplay; encrypted-media"
-              frameBorder="0"
-            />
-          </div>
-        ) : (
+        {isYouTube ? (
+          ytId ? (
+            <div className="absolute inset-0 w-full h-full pointer-events-none overflow-hidden bg-black">
+              <iframe 
+                src={`https://www.youtube.com/embed/${ytId}?autoplay=1&loop=1&mute=1&playlist=${ytId}&controls=0&showinfo=0&rel=0&modestbranding=1&playsinline=1`}
+                className="absolute top-1/2 left-1/2 -translate-x-1/2 -translate-y-1/2 w-[200vw] h-[200vh] min-w-full min-h-full object-cover opacity-80"
+                allow="autoplay; encrypted-media"
+                frameBorder="0"
+              />
+            </div>
+          ) : (
+            <div className="absolute inset-0 bg-black flex items-center justify-center">
+              <span className="text-white/30 text-sm">Invalid YouTube Link</span>
+            </div>
+          )
+        ) : currentVideo ? (
           <BoomerangVideoBg src={currentVideo} />
-        )}
+        ) : null}
       </div>
       
       {/* Dark gradient overlay so images pop more against the video */}
