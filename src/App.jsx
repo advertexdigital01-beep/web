@@ -1,4 +1,6 @@
-import React, { Suspense, useRef } from 'react';
+import React, { Suspense, useRef, useState, useEffect } from 'react';
+import { collection, query, orderBy, getDocs } from 'firebase/firestore';
+import { db } from './lib/firebase';
 import { cva } from 'class-variance-authority';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
@@ -534,19 +536,38 @@ const Carousel_001 = ({
 };
 
 function OurWorkSection() {
-  const images = [
-    { src: "/images/work/IMG_6264.jpg", alt: "Our Work Showcase" },
-    { src: "/images/work/IMG_6265.jpg", alt: "Our Work Showcase" },
-    { src: "/images/work/IMG_6282.jpg", alt: "Our Work Showcase" },
-    { src: "/images/work/IMG_6293.jpg", alt: "Our Work Showcase" },
-    { src: "/images/work/IMG_7026.jpg", alt: "Our Work Showcase" },
-    { src: "/images/work/IMG_7141.JPG.jpeg", alt: "Our Work Showcase" },
-    { src: "/images/work/IMG_7459.jpg", alt: "Our Work Showcase" },
-    { src: "/images/work/IMG_7462.jpg", alt: "Our Work Showcase" },
-    { src: "/images/work/IMG_7478.jpg", alt: "Our Work Showcase" },
-    { src: "/images/work/IMG_7482.jpg", alt: "Our Work Showcase" },
-    { src: "/images/work/IMG_7483.jpg", alt: "Our Work Showcase" },
-  ];
+  const [images, setImages] = useState([]);
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    const fetchImages = async () => {
+      try {
+        const q = query(collection(db, 'gallery_images'), orderBy('createdAt', 'desc'));
+        const snapshot = await getDocs(q);
+        const data = snapshot.docs.map(doc => ({
+          src: doc.data().url,
+          alt: "Our Work Showcase"
+        }));
+        
+        // If empty (e.g. before migration), fall back to some defaults or show nothing
+        if (data.length > 0) {
+          setImages(data);
+        } else {
+          setImages([
+            { src: "/images/work/IMG_6264.jpg", alt: "Our Work Showcase" },
+            { src: "/images/work/IMG_6265.jpg", alt: "Our Work Showcase" },
+            { src: "/images/work/IMG_6282.jpg", alt: "Our Work Showcase" }
+          ]);
+        }
+      } catch (err) {
+        console.error("Error fetching images for OurWorkSection:", err);
+      } finally {
+        setLoading(false);
+      }
+    };
+    
+    fetchImages();
+  }, []);
 
   return (
     <section id="projects" className="py-24 md:py-32 bg-white relative overflow-hidden">
@@ -559,15 +580,20 @@ function OurWorkSection() {
         </h3>
       </div>
       
-      <div className="w-full">
-        <Carousel_001 
-          className="px-4" 
-          images={images} 
-          showPagination={true} 
-          showNavigation={true} 
-          loop={true} 
-          autoplay={true} 
-        />
+      <div className="w-full min-h-[400px] flex items-center justify-center">
+        {loading ? (
+          <div className="text-gray-400 font-medium tracking-widest uppercase">Loading Gallery...</div>
+        ) : (
+          <Carousel_001 
+            className="px-4" 
+            images={images} 
+            showPagination={true} 
+            showNavigation={true} 
+            loop={true} 
+            autoplay={true} 
+          />
+        )}
+      </div>
       </div>
     </section>
   );
