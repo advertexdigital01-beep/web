@@ -24,7 +24,7 @@ export default function Footer() {
         <div>
           <h3 className="font-semibold mb-6">Contact</h3>
           <p className="text-gray-400 text-sm mb-2">93604 57579</p>
-          <p className="text-gray-400 text-sm hover:text-white cursor-pointer transition-colors">hello@advertex.com</p>
+          <p className="text-gray-400 text-sm hover:text-white cursor-pointer transition-colors">advertexdigital01@gmail.com</p>
         </div>
 
         <div>
