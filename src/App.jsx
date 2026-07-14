@@ -109,7 +109,12 @@ function HeroSection() {
             />
           </Suspense>
         ) : (
-          <div className="absolute inset-0 bg-hero-bg opacity-100 overflow-hidden" />
+          <div className="absolute inset-0 bg-hero-bg overflow-hidden flex items-center justify-center">
+            {/* Extremely lightweight CSS animation for mobile */}
+            <div className="absolute top-[15%] left-[10%] w-[60vw] h-[60vw] bg-white/5 rounded-full mix-blend-screen filter blur-[60px] animate-blob opacity-70" />
+            <div className="absolute top-[40%] right-[10%] w-[55vw] h-[55vw] bg-blue-500/10 rounded-full mix-blend-screen filter blur-[60px] animate-blob opacity-60" style={{ animationDelay: '2s' }} />
+            <div className="absolute bottom-[10%] left-[30%] w-[70vw] h-[70vw] bg-green-500/5 rounded-full mix-blend-screen filter blur-[60px] animate-blob opacity-50" style={{ animationDelay: '4s' }} />
+          </div>
         )}
       </div>
       
