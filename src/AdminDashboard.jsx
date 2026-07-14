@@ -15,6 +15,7 @@ export default function AdminDashboard() {
   const [loadingGallery, setLoadingGallery] = useState(true);
   
   const [uploading, setUploading] = useState(false);
+  const [uploadProgress, setUploadProgress] = useState(0);
   const fileInputRef = useRef(null);
   const navigate = useNavigate();
   const hasMigrated = useRef(false);
@@ -97,21 +98,44 @@ export default function AdminDashboard() {
     if (files.length === 0) return;
 
     setUploading(true);
+    setUploadProgress(0);
     let newImages = [];
+    
+    const totalSize = files.reduce((sum, file) => sum + file.size, 0);
+    let uploadedBytesBeforeCurrent = 0;
 
     for (const file of files) {
-      // Cloudinary Unsigned Upload
-      const formData = new FormData();
-      formData.append("file", file);
-      formData.append("upload_preset", "website");
-      formData.append("cloud_name", "ndpct9uz");
-
       try {
-        const res = await fetch("https://api.cloudinary.com/v1_1/ndpct9uz/image/upload", {
-          method: "POST",
-          body: formData
+        const data = await new Promise((resolve, reject) => {
+          const formData = new FormData();
+          formData.append("file", file);
+          formData.append("upload_preset", "website");
+          formData.append("cloud_name", "ndpct9uz");
+
+          const xhr = new XMLHttpRequest();
+          xhr.open("POST", "https://api.cloudinary.com/v1_1/ndpct9uz/image/upload");
+          
+          xhr.upload.onprogress = (e) => {
+            if (e.lengthComputable) {
+               const overallLoaded = uploadedBytesBeforeCurrent + e.loaded;
+               const percent = Math.min(100, Math.round((overallLoaded / totalSize) * 100));
+               setUploadProgress(percent);
+            }
+          };
+          
+          xhr.onload = () => {
+            if (xhr.status >= 200 && xhr.status < 300) {
+              resolve(JSON.parse(xhr.responseText));
+            } else {
+              reject(new Error("Cloudinary upload failed"));
+            }
+          };
+          
+          xhr.onerror = () => reject(new Error("Network Error"));
+          xhr.send(formData);
         });
-        const data = await res.json();
+        
+        uploadedBytesBeforeCurrent += file.size;
         
         if (data.secure_url) {
           // Inject f_auto,q_auto to convert HEIC to web-safe formats (WebP/JPEG) and optimize size
@@ -140,6 +164,7 @@ export default function AdminDashboard() {
     }
 
     setUploading(false);
+    setUploadProgress(0);
     if (fileInputRef.current) fileInputRef.current.value = "";
   };
 
@@ -283,10 +308,18 @@ export default function AdminDashboard() {
                 <button 
                   onClick={() => fileInputRef.current?.click()}
                   disabled={uploading}
-                  className="flex items-center gap-2 bg-white text-black px-6 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors disabled:opacity-70"
+                  className="relative overflow-hidden flex items-center justify-center gap-2 bg-white text-black px-6 py-3 rounded-xl font-medium hover:bg-gray-200 transition-colors disabled:opacity-90 w-48"
                 >
-                  {uploading ? <Loader2 size={18} className="animate-spin" /> : <Upload size={18} />}
-                  {uploading ? 'Uploading...' : 'Upload Image'}
+                  {uploading && (
+                    <div 
+                      className="absolute left-0 top-0 bottom-0 bg-blue-500/20 transition-all duration-300"
+                      style={{ width: `${uploadProgress}%` }}
+                    />
+                  )}
+                  {uploading ? <Loader2 size={18} className="animate-spin relative z-10" /> : <Upload size={18} className="relative z-10" />}
+                  <span className="relative z-10">
+                    {uploading ? `Uploading ${uploadProgress}%` : 'Upload Image'}
+                  </span>
                 </button>
               </div>
             </div>
