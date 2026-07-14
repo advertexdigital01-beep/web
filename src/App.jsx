@@ -615,9 +615,9 @@ function LogoMarqueeSection() {
       <div className="flex animate-marquee whitespace-nowrap min-w-max items-center">
         {/* We duplicate the logo track 4 times so the infinite scroll is seamless even on ultra-wide monitors */}
         {[...Array(4)].map((_, i) => (
-          <div key={i} className="flex gap-32 md:gap-64 px-16 md:px-32 items-center min-w-max">
+          <div key={i} className="flex gap-12 sm:gap-24 md:gap-48 px-8 md:px-24 items-center min-w-max">
             {logos.map((src, j) => (
-              <img key={j} src={src} alt="Company Logo" className="h-14 md:h-20 w-auto object-contain brightness-0 invert opacity-100 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] hover:scale-110 transition-all cursor-pointer" />
+              <img key={j} src={src} alt="Company Logo" className="h-10 sm:h-12 md:h-16 lg:h-20 w-auto object-contain brightness-0 invert opacity-100 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] hover:scale-110 transition-all cursor-pointer" />
             ))}
           </div>
         ))}
