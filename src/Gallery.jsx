@@ -62,8 +62,14 @@ export default function Gallery() {
     return match ? match[1] : null;
   };
 
+  const oldBgUrl = "https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260611_183632_c311af08-e4b7-458f-81e7-79847a49b3d3.mp4";
+
   return (
     <div className="relative min-h-screen w-full overflow-hidden bg-black font-sora">
+      {/* Original Boomerang Background Video */}
+      <div className="absolute inset-0 z-0">
+        <BoomerangVideoBg src={oldBgUrl} />
+      </div>
       
       {/* Dark gradient overlay so images pop more against the video */}
       <div className="absolute inset-0 z-0 bg-black/60 pointer-events-none" />
