@@ -123,7 +123,8 @@ export default function AdminDashboard() {
           newImages.push({ id: docRef.id, url: data.secure_url });
         }
       } catch (err) {
-        console.error("Upload error for file", file.name, err);
+        console.error("Upload error for file", file?.name, err);
+        alert(`Failed to upload image: ${err.message}. If this says 'Missing or insufficient permissions', you need to update your Firebase Security Rules!`);
       }
     }
     
@@ -134,57 +135,6 @@ export default function AdminDashboard() {
 
     setUploading(false);
     if (fileInputRef.current) fileInputRef.current.value = "";
-  };
-
-  const handleMigrate = async () => {
-    const imagesToMigrate = [
-      "/images/work/IMG_6264.jpg",
-      "/images/work/IMG_6265.jpg",
-      "/images/work/IMG_6282.jpg",
-      "/images/work/IMG_6293.jpg",
-      "/images/work/IMG_7026.jpg",
-      "/images/work/IMG_7141.JPG.jpeg",
-      "/images/work/IMG_7459.jpg",
-      "/images/work/IMG_7462.jpg",
-      "/images/work/IMG_7478.jpg",
-      "/images/work/IMG_7482.jpg",
-      "/images/work/IMG_7483.jpg"
-    ];
-
-    if (!window.confirm(`This will upload ${imagesToMigrate.length} images. Are you sure?`)) return;
-
-    setUploading(true);
-    let newImages = [];
-    for (const imgPath of imagesToMigrate) {
-      try {
-        const response = await fetch(imgPath);
-        const blob = await response.blob();
-        
-        const formData = new FormData();
-        formData.append("file", blob);
-        formData.append("upload_preset", "website");
-        formData.append("cloud_name", "ndpct9uz");
-
-        const res = await fetch("https://api.cloudinary.com/v1_1/ndpct9uz/image/upload", {
-          method: "POST",
-          body: formData
-        });
-        const data = await res.json();
-        
-        if (data.secure_url) {
-          const docRef = await addDoc(collection(db, 'gallery_images'), {
-            url: data.secure_url,
-            createdAt: serverTimestamp()
-          });
-          newImages.push({ id: docRef.id, url: data.secure_url });
-        }
-      } catch (err) {
-        console.error("Migration error for", imgPath, err);
-      }
-    }
-    setUploading(false);
-    setGallery(prev => [...newImages, ...prev]);
-    alert("Migration complete!");
   };
 
   const handleDeleteImage = async (id) => {
@@ -315,15 +265,7 @@ export default function AdminDashboard() {
                 <p className="text-sm text-gray-400">Upload new images to Cloudinary to display on the website.</p>
               </div>
               
-              <div className="flex gap-4">
-                <button 
-                  onClick={handleMigrate}
-                  disabled={uploading}
-                  className="flex items-center gap-2 bg-blue-600 text-white px-4 py-3 rounded-xl font-medium hover:bg-blue-700 transition-colors disabled:opacity-70 text-sm"
-                >
-                  {uploading ? <Loader2 size={16} className="animate-spin" /> : null}
-                  {uploading ? 'Migrating...' : 'Migrate Old Images'}
-                </button>
+              <div>
                 <input 
                   type="file" 
                   accept="image/*" 
