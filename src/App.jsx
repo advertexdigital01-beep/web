@@ -570,12 +570,41 @@ function OurWorkSection() {
   );
 }
 
+function LogoMarqueeSection() {
+  const logos = [
+    "/images/company/IMG_4667.PNG",
+    "/images/company/IMG_5589.PNG",
+    "/images/company/Screenshot_2026-07-14_201402-removebg-preview.png",
+    "/images/company/svg.png",
+  ];
+
+  return (
+    <section className="py-16 bg-[#0a0a0a] border-y border-white/5 overflow-hidden relative flex">
+      {/* Gradients to fade edges */}
+      <div className="absolute inset-y-0 left-0 w-24 md:w-64 bg-gradient-to-r from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+      <div className="absolute inset-y-0 right-0 w-24 md:w-64 bg-gradient-to-l from-[#0a0a0a] to-transparent z-10 pointer-events-none" />
+      
+      <div className="flex animate-marquee whitespace-nowrap min-w-max items-center">
+        {/* We duplicate the logo track 4 times so the infinite scroll is seamless even on ultra-wide monitors */}
+        {[...Array(4)].map((_, i) => (
+          <div key={i} className="flex gap-16 md:gap-32 px-8 md:px-16 items-center min-w-max">
+            {logos.map((src, j) => (
+              <img key={j} src={src} alt="Company Logo" className="h-10 md:h-14 w-auto object-contain grayscale hover:grayscale-0 transition-all opacity-50 hover:opacity-100 cursor-pointer" />
+            ))}
+          </div>
+        ))}
+      </div>
+    </section>
+  );
+}
+
 function HomePage() {
   return (
     <ReactLenis root options={{ smoothTouch: false, lerp: 0.1, wheelMultiplier: 1.2 }}>
       <div className="bg-hero-bg min-h-screen font-sora overflow-x-hidden w-full">
         <Navbar />
         <HeroSection />
+        <LogoMarqueeSection />
         <ServicesSection />
         <OurWorkSection />
         <FooterSection />

@@ -33,6 +33,15 @@ export default {
       },
       boxShadow: {
         'subtle': '0 4px 20px rgba(0, 0, 0, 0.05)',
+      },
+      animation: {
+        'marquee': 'marquee 25s linear infinite',
+      },
+      keyframes: {
+        marquee: {
+          '0%': { transform: 'translateX(0%)' },
+          '100%': { transform: 'translateX(-50%)' },
+        }
       }
     },
   },
