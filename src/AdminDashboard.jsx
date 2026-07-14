@@ -20,7 +20,8 @@ export default function AdminDashboard() {
   const navigate = useNavigate();
   const hasMigrated = useRef(false);
 
-  const [videoUrl, setVideoUrl] = useState('');
+  const [videoUrls, setVideoUrls] = useState([]);
+  const [newVideoUrl, setNewVideoUrl] = useState('');
   const [savingVideo, setSavingVideo] = useState(false);
 
   // Fetch Inquiries
@@ -60,13 +61,19 @@ export default function AdminDashboard() {
     }
   };
 
-  // Fetch Settings (Video URL)
+  // Fetch Settings (Video URLs)
   const fetchSettings = async () => {
     try {
       const docRef = doc(db, 'site_settings', 'gallery');
       const docSnap = await getDoc(docRef);
       if (docSnap.exists()) {
-        setVideoUrl(docSnap.data().backgroundVideoUrl || '');
+        const data = docSnap.data();
+        if (data.videoUrls && Array.isArray(data.videoUrls)) {
+          setVideoUrls(data.videoUrls);
+        } else if (data.backgroundVideoUrl) {
+          // Migration from old single string
+          setVideoUrls([data.backgroundVideoUrl]);
+        }
       }
     } catch (err) {
       console.error("Error fetching settings:", err);
@@ -197,17 +204,30 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleSaveVideo = async () => {
+  const handleAddVideo = async () => {
+    if (!newVideoUrl.trim()) return;
+    const updatedUrls = [...videoUrls, newVideoUrl.trim()];
+    setVideoUrls(updatedUrls);
+    setNewVideoUrl('');
+    await saveVideoUrlsToDb(updatedUrls);
+  };
+
+  const handleRemoveVideo = async (indexToRemove) => {
+    const updatedUrls = videoUrls.filter((_, idx) => idx !== indexToRemove);
+    setVideoUrls(updatedUrls);
+    await saveVideoUrlsToDb(updatedUrls);
+  };
+
+  const saveVideoUrlsToDb = async (urls) => {
     setSavingVideo(true);
     try {
       await setDoc(doc(db, 'site_settings', 'gallery'), {
-        backgroundVideoUrl: videoUrl,
+        videoUrls: urls,
         updatedAt: serverTimestamp()
       }, { merge: true });
-      alert("Background video URL saved successfully!");
     } catch (err) {
-      console.error("Error saving video URL:", err);
-      alert(`Failed to save video URL: ${err.message}. If this says missing permissions, please update your Firebase Rules for site_settings!`);
+      console.error("Error saving video URLs:", err);
+      alert(`Failed to save: ${err.message}`);
     }
     setSavingVideo(false);
   };
@@ -325,26 +345,60 @@ export default function AdminDashboard() {
           <div className="space-y-10">
             {/* Background Video Section */}
             <div className="bg-[#151515] p-6 rounded-2xl border border-white/5">
-              <h2 className="text-xl font-medium text-white mb-2">Highlight Background Video</h2>
-              <p className="text-sm text-gray-400 mb-4">
-                Paste a YouTube URL or a direct video link (.mp4). This video will play silently at the very top of the Our Work page.
-              </p>
-              <div className="flex gap-4">
+              <div className="flex justify-between items-start mb-4">
+                <div>
+                  <h2 className="text-xl font-medium text-white mb-2">Highlight Background Videos</h2>
+                  <p className="text-sm text-gray-400">
+                    Add YouTube URLs or direct video links (.mp4). The website will automatically rotate through these videos.
+                  </p>
+                </div>
+                {savingVideo && <Loader2 size={20} className="animate-spin text-blue-500" />}
+              </div>
+              
+              <div className="flex gap-4 mb-6">
                 <input 
                   type="text" 
-                  value={videoUrl}
-                  onChange={(e) => setVideoUrl(e.target.value)}
+                  value={newVideoUrl}
+                  onChange={(e) => setNewVideoUrl(e.target.value)}
+                  onKeyDown={(e) => e.key === 'Enter' && handleAddVideo()}
                   placeholder="https://www.youtube.com/watch?v=..."
                   className="flex-1 bg-black border border-white/10 rounded-xl px-4 py-3 text-white placeholder-gray-600 focus:outline-none focus:border-blue-500 transition-colors"
                 />
                 <button 
-                  onClick={handleSaveVideo}
-                  disabled={savingVideo}
+                  onClick={handleAddVideo}
+                  disabled={savingVideo || !newVideoUrl.trim()}
                   className="bg-blue-600 text-white px-8 py-3 rounded-xl font-medium hover:bg-blue-700 transition-colors disabled:opacity-70 flex items-center justify-center min-w-[120px]"
                 >
-                  {savingVideo ? <Loader2 size={18} className="animate-spin" /> : 'Save Video'}
+                  Add Video
                 </button>
               </div>
+
+              {videoUrls.length > 0 && (
+                <div className="space-y-3">
+                  <h3 className="text-sm font-medium text-gray-400 uppercase tracking-wider mb-2">Active Playlist</h3>
+                  {videoUrls.map((url, idx) => (
+                    <div key={idx} className="flex items-center justify-between bg-black/50 p-4 rounded-xl border border-white/5">
+                      <div className="truncate pr-4 text-sm text-gray-300">
+                        <span className="text-gray-500 mr-3">{idx + 1}.</span>
+                        {url}
+                      </div>
+                      <button 
+                        onClick={() => handleRemoveVideo(idx)}
+                        disabled={savingVideo}
+                        className="text-red-500 hover:text-red-400 hover:bg-red-500/10 p-2 rounded-lg transition-colors"
+                        title="Remove Video"
+                      >
+                        <Trash2 size={18} />
+                      </button>
+                    </div>
+                  ))}
+                </div>
+              )}
+              {videoUrls.length === 0 && (
+                <div className="text-center py-8 bg-black/20 rounded-xl border border-dashed border-white/10 text-gray-500 text-sm">
+                  No background videos added yet.
+                </div>
+              )}
             </div>
 
             {/* Gallery Images Section */}
