@@ -14,6 +14,9 @@ import "swiper/css/navigation";
 import "swiper/css";
 import Gallery from "./Gallery";
 import StartProject from "./StartProject";
+import AdminLogin from "./AdminLogin";
+import AdminDashboard from "./AdminDashboard";
+import ProtectedRoute from "./components/ProtectedRoute";
 
 const Spline = React.lazy(() => import('@splinetool/react-spline'));
 
@@ -637,6 +640,17 @@ export default function App() {
         <Route path="/" element={<HomePage />} />
         <Route path="/work" element={<Gallery />} />
         <Route path="/start" element={<StartProject />} />
+        
+        {/* Admin Routes */}
+        <Route path="/admin" element={<AdminLogin />} />
+        <Route 
+          path="/admin/dashboard" 
+          element={
+            <ProtectedRoute>
+              <AdminDashboard />
+            </ProtectedRoute>
+          } 
+        />
       </Routes>
     </BrowserRouter>
   );
