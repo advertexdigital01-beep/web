@@ -65,7 +65,7 @@ function Navbar() {
       </div>
 
       <div className="hidden md:flex gap-8 items-center mr-8">
-        {["Services", "About Us", "Projects", "Team", "Contacts"].map((item) => (
+        {["Services", "Projects", "Contacts"].map((item) => (
           <a
             key={item}
             href={`#${item.toLowerCase().replace(' ', '-')}`}
@@ -75,10 +75,6 @@ function Navbar() {
           </a>
         ))}
       </div>
-      
-      <Button variant="navCta" size="lg" className="hidden md:inline-flex rounded-lg uppercase text-xs tracking-widest px-6">
-        Let's Talk
-      </Button>
     </nav>
   );
 }
@@ -587,9 +583,7 @@ function HomePage() {
         <Navbar />
         <HeroSection />
         <ServicesSection />
-        <AboutSection />
         <OurWorkSection />
-        <TestimonialsSection />
         <FooterSection />
       </div>
     </ReactLenis>
