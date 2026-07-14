@@ -589,7 +589,7 @@ function LogoMarqueeSection() {
         {[...Array(4)].map((_, i) => (
           <div key={i} className="flex gap-16 md:gap-32 px-8 md:px-16 items-center min-w-max">
             {logos.map((src, j) => (
-              <img key={j} src={src} alt="Company Logo" className="h-10 md:h-14 w-auto object-contain brightness-0 invert opacity-60 hover:opacity-100 transition-all cursor-pointer" />
+              <img key={j} src={src} alt="Company Logo" className="h-14 md:h-20 w-auto object-contain brightness-0 invert opacity-100 drop-shadow-[0_0_10px_rgba(255,255,255,0.2)] hover:scale-110 transition-all cursor-pointer" />
             ))}
           </div>
         ))}
