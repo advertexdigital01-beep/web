@@ -109,11 +109,11 @@ function HeroSection() {
             />
           </Suspense>
         ) : (
-          <div className="absolute inset-0 bg-hero-bg overflow-hidden flex items-center justify-center">
+          <div className="absolute inset-0 bg-[#0a0a0a] overflow-hidden flex items-center justify-center">
             {/* Extremely lightweight CSS animation for mobile */}
-            <div className="absolute top-[15%] left-[10%] w-[60vw] h-[60vw] bg-white/5 rounded-full mix-blend-screen filter blur-[60px] animate-blob opacity-70" />
-            <div className="absolute top-[40%] right-[10%] w-[55vw] h-[55vw] bg-blue-500/10 rounded-full mix-blend-screen filter blur-[60px] animate-blob opacity-60" style={{ animationDelay: '2s' }} />
-            <div className="absolute bottom-[10%] left-[30%] w-[70vw] h-[70vw] bg-green-500/5 rounded-full mix-blend-screen filter blur-[60px] animate-blob opacity-50" style={{ animationDelay: '4s' }} />
+            <div className="absolute top-[10%] left-[5%] w-[70vw] h-[70vw] bg-green-500/20 rounded-full filter blur-[80px] animate-blob" />
+            <div className="absolute top-[40%] right-[5%] w-[60vw] h-[60vw] bg-blue-500/20 rounded-full filter blur-[80px] animate-blob" style={{ animationDelay: '2s' }} />
+            <div className="absolute bottom-[10%] left-[20%] w-[80vw] h-[80vw] bg-purple-500/20 rounded-full filter blur-[80px] animate-blob" style={{ animationDelay: '4s' }} />
           </div>
         )}
       </div>
