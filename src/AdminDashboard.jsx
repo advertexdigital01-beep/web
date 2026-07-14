@@ -49,13 +49,6 @@ export default function AdminDashboard() {
         ...doc.data()
       }));
       setGallery(data);
-
-      // Auto-migrate if the database is completely empty
-      if (data.length === 0 && !hasMigrated.current) {
-        hasMigrated.current = true;
-        console.log("Empty gallery detected, automatically migrating old images...");
-        handleAutoMigrate();
-      }
     } catch (err) {
       console.error("Error fetching gallery:", err);
     } finally {
@@ -137,7 +130,7 @@ export default function AdminDashboard() {
     }
   };
 
-  const handleAutoMigrate = async () => {
+  const handleMigrate = async () => {
     const imagesToMigrate = [
       "/images/work/IMG_6264.jpg",
       "/images/work/IMG_6265.jpg",
@@ -151,6 +144,8 @@ export default function AdminDashboard() {
       "/images/work/IMG_7482.jpg",
       "/images/work/IMG_7483.jpg"
     ];
+
+    if (!window.confirm(`This will upload ${imagesToMigrate.length} images. Are you sure?`)) return;
 
     setUploading(true);
     let newImages = [];
@@ -183,6 +178,7 @@ export default function AdminDashboard() {
     }
     setUploading(false);
     setGallery(prev => [...newImages, ...prev]);
+    alert("Migration complete!");
   };
 
   const handleDeleteImage = async (id) => {
@@ -313,7 +309,15 @@ export default function AdminDashboard() {
                 <p className="text-sm text-gray-400">Upload new images to Cloudinary to display on the website.</p>
               </div>
               
-              <div>
+              <div className="flex gap-4">
+                <button 
+                  onClick={handleMigrate}
+                  disabled={uploading}
+                  className="flex items-center gap-2 bg-blue-600 text-white px-4 py-3 rounded-xl font-medium hover:bg-blue-700 transition-colors disabled:opacity-70 text-sm"
+                >
+                  {uploading ? <Loader2 size={16} className="animate-spin" /> : null}
+                  {uploading ? 'Migrating...' : 'Migrate Old Images'}
+                </button>
                 <input 
                   type="file" 
                   accept="image/*" 
