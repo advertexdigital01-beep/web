@@ -28,5 +28,11 @@ export const servicesData = [
     title: "Public Relations",
     image: "https://images.unsplash.com/photo-1557426272-fc759fdf7a8d?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
     items: ["Press Releases", "Event & Experiential PR", "Strategic Brand Communications", "Corporate & Start-up Profiling", "Social Media Campaigns", "Press Conferences", "TV Interviews", "News Paper / Magazine", "Media Relations"]
+  },
+  {
+    id: "video-production",
+    title: "Video Production",
+    image: "https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
+    items: ["Drone Cam", "Reels", "Short film making"]
   }
 ];
