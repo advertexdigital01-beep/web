@@ -73,10 +73,10 @@ function Navbar() {
       </div>
 
       <div className="hidden md:flex gap-8 items-center mr-8">
-        {["Services", "Projects", "Contacts"].map((item) => (
+        {["Home", "Services", "Projects", "Contacts"].map((item) => (
           <Link
             key={item}
-            to={`/${item.toLowerCase().replace(' ', '-')}`}
+            to={item === "Home" ? "/" : `/${item.toLowerCase().replace(' ', '-')}`}
             className="text-sm text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest"
           >
             {item}
