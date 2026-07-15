@@ -7,6 +7,7 @@ import { twMerge } from 'tailwind-merge';
 import { motion, useInView, AnimatePresence } from "framer-motion";
 import { ReactLenis } from "lenis/react";
 import { ChevronLeftIcon, ChevronRightIcon, Menu, X, ChevronDown, ChevronUp, ArrowUpRight } from "lucide-react";
+import { servicesData } from "./data/servicesData";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { Autoplay, EffectCoverflow, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
