@@ -19,6 +19,9 @@ import StartProject from "./StartProject";
 import AdminLogin from "./AdminLogin";
 import AdminDashboard from "./AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
+import ServicesPage from "./pages/ServicesPage";
+import ProjectsPage from "./pages/ProjectsPage";
+import ContactPage from "./pages/ContactPage";
 
 const Spline = React.lazy(() => import('@splinetool/react-spline'));
 
@@ -71,13 +74,13 @@ function Navbar() {
 
       <div className="hidden md:flex gap-8 items-center mr-8">
         {["Services", "Projects", "Contacts"].map((item) => (
-          <a
+          <Link
             key={item}
-            href={`#${item.toLowerCase().replace(' ', '-')}`}
+            to={`/${item.toLowerCase().replace(' ', '-')}`}
             className="text-sm text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest"
           >
             {item}
-          </a>
+          </Link>
         ))}
       </div>
     </nav>
@@ -261,6 +264,21 @@ function AboutSection() {
   return (
     <section id="about-us" className="py-24 md:py-32 px-6 md:px-16 bg-hero-bg relative border-t border-white/5">
       <div className="max-w-7xl mx-auto">
+        <div className="flex flex-col md:flex-row justify-between items-end mb-16 gap-8">
+          <div>
+            <h2 className="text-[clamp(2.5rem,5vw,4.5rem)] font-bold text-foreground leading-[1.1] tracking-tighter uppercase mb-4">
+              Featured <br /><span className="text-primary">Projects</span>
+            </h2>
+            <p className="text-muted-foreground text-lg max-w-lg">
+              A glimpse into our recent successful campaigns and brand transformations.
+            </p>
+          </div>
+          <Link to="/projects">
+            <button className="bg-white/5 border border-white/10 hover:bg-white/10 text-foreground px-8 py-4 rounded-full font-bold uppercase tracking-widest text-sm transition-all whitespace-nowrap">
+              View Full Portfolio
+            </button>
+          </Link>
+        </div>
         <div className="grid grid-cols-1 lg:grid-cols-2 gap-16 items-center">
           <div>
             <h2 className="text-[clamp(2.5rem,5vw,4rem)] font-bold leading-[1.1] tracking-[-0.04em] text-foreground mb-8 flex flex-col items-start gap-[0.1em]">
@@ -284,19 +302,6 @@ function AboutSection() {
           <div className="relative">
             <div className="aspect-square bg-muted/20 rounded-[32px] border border-white/10 overflow-hidden relative group">
               <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent mix-blend-overlay" />
-              <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Team collaborating" className="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
-            </div>
-            {/* Floating badge */}
-            <div className="absolute -bottom-8 -left-8 bg-background border border-border p-6 rounded-2xl shadow-2xl hidden md:block">
-              <div className="flex items-center gap-4">
-                <div className="w-12 h-12 bg-primary rounded-full flex items-center justify-center text-primary-foreground">
-                  <svg className="w-6 h-6" fill="none" viewBox="0 0 24 24" stroke="currentColor"><path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M5 13l4 4L19 7" /></svg>
-                </div>
-                <div>
-                  <p className="font-bold text-foreground text-lg">Award Winning</p>
-                  <p className="text-muted-foreground text-sm">Agency of the Year 2025</p>
-                </div>
-              </div>
             </div>
           </div>
         </div>
@@ -305,12 +310,11 @@ function AboutSection() {
   );
 }
 
-
 function TestimonialsSection() {
   const testimonials = [
-    { quote: "Advertex transformed our digital presence entirely. Their strategic approach to our campaign resulted in a 300% ROI within the first quarter.", author: "Sarah Jenkins", role: "CMO, TechFlow" },
-    { quote: "The attention to detail and creative execution is unmatched. They don't just act like an agency, they act like a core partner in our business growth.", author: "Michael Chen", role: "Founder, Zenith AI" },
-    { quote: "A world-class team. The e-commerce platform they designed and built broke all our previous sales records on launch day.", author: "Elena Rodriguez", role: "VP Marketing, Lumina" }
+    { quote: "Advertex transformed our digital presence entirely.", author: "Sarah Jenkins", role: "CMO, TechFlow" },
+    { quote: "The attention to detail and creative execution is unmatched.", author: "Michael Chen", role: "Founder, Zenith AI" },
+    { quote: "A world-class team.", author: "Elena Rodriguez", role: "VP Marketing, Lumina" }
   ];
 
   return (
@@ -319,11 +323,9 @@ function TestimonialsSection() {
         <h2 className="text-center text-sm text-primary uppercase tracking-[0.3em] font-bold mb-16 flex justify-center">
           <AnimatedText text="Client Stories" />
         </h2>
-        
         <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
           {testimonials.map((t, i) => (
             <div key={i} className="bg-muted/30 border border-border p-10 rounded-2xl">
-              <svg className="w-8 h-8 text-primary/50 mb-6" fill="currentColor" viewBox="0 0 24 24"><path d="M14.017 21v-7.391c0-5.704 3.731-9.57 8.983-10.609l.995 2.151c-2.432.917-3.995 3.638-3.995 5.849h4v10h-9.983zm-14.017 0v-7.391c0-5.704 3.748-9.57 9-10.609l.996 2.151c-2.433.917-3.996 3.638-3.996 5.849h3.983v10h-9.983z" /></svg>
               <p className="text-foreground text-lg font-light leading-relaxed mb-8">{t.quote}</p>
               <div>
                 <p className="font-bold text-foreground">{t.author}</p>
@@ -346,14 +348,13 @@ function FooterSection() {
           <AnimatedText text="Transform?" className="text-primary" />
         </h2>
         <p className="text-muted-foreground text-xl max-w-2xl mb-12">
-          Let's build something extraordinary together. Drop us a line and our team will get back to you within 24 hours.
+          Let's build something extraordinary together.
         </p>
         <Link to="/start">
           <button className="bg-primary text-primary-foreground hover:brightness-110 active:scale-95 transition-all rounded-full px-12 py-5 text-lg font-bold uppercase tracking-widest mb-24">
             Start a Project
           </button>
         </Link>
-        
         <div className="w-full grid grid-cols-1 md:grid-cols-3 gap-12 text-center md:text-left mb-12 border-t border-border pt-16">
           <div>
             <h4 className="font-bold text-foreground mb-4 uppercase tracking-widest text-sm">Headquarters</h4>
@@ -646,6 +647,20 @@ function HomePage() {
   );
 }
 
+function Layout({ children }) {
+  return (
+    <ReactLenis root options={{ smoothTouch: false, lerp: 0.1, wheelMultiplier: 1.2 }}>
+      <div className="bg-hero-bg min-h-screen font-sora overflow-x-hidden w-full flex flex-col">
+        <Navbar />
+        <main className="flex-1 relative z-10">
+          {children}
+        </main>
+        <FooterSection />
+      </div>
+    </ReactLenis>
+  );
+}
+
 function FloatingWhatsApp() {
   return (
     <a
@@ -668,7 +683,10 @@ export default function App() {
       <FloatingWhatsApp />
       <Routes>
         <Route path="/" element={<HomePage />} />
-        <Route path="/work" element={<Gallery />} />
+        <Route path="/services" element={<Layout><ServicesPage /></Layout>} />
+        <Route path="/projects" element={<Layout><ProjectsPage /></Layout>} />
+        <Route path="/contacts" element={<Layout><ContactPage /></Layout>} />
+        <Route path="/work" element={<Layout><ProjectsPage /></Layout>} />
         <Route path="/start" element={<StartProject />} />
         
         {/* Admin Routes */}
