@@ -40,10 +40,10 @@ export default function ContactPage() {
           <div>
             <h3 className="text-lg font-bold uppercase tracking-widest mb-4">Follow Us</h3>
             <div className="flex gap-4">
-              <a href="#" className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all font-bold text-xs">
+              <a href="https://www.instagram.com/advertex_media" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all font-bold text-xs">
                 IG
               </a>
-              <a href="#" className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all font-bold text-xs">
+              <a href="https://www.facebook.com/share/14mPjKBecrm/?mibextid=wwXIfr" target="_blank" rel="noopener noreferrer" className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all font-bold text-xs">
                 FB
               </a>
             </div>
