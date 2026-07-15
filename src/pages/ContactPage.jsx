@@ -21,18 +21,18 @@ export default function ContactPage() {
                 <MapPin className="w-6 h-6 text-primary shrink-0 mt-1" />
                 <div>
                   <p className="font-bold mb-1">Advertex Media</p>
-                  <p className="text-muted-foreground">123 Creative Street<br />Coimbatore, Tamil Nadu 641001<br />India</p>
+                  <p className="text-muted-foreground">1/199, KAM Complex, North Street,<br />Kottaipalayam, Coimbatore,<br />Tamil Nadu, India - 641110</p>
                 </div>
               </div>
               
-              <div className="flex items-center gap-4">
-                <Phone className="w-6 h-6 text-primary shrink-0" />
-                <p className="text-muted-foreground">+91 98765 43210</p>
+              <div className="flex items-start gap-4">
+                <Phone className="w-6 h-6 text-primary shrink-0 mt-1" />
+                <p className="text-muted-foreground">+91 99941 22362<br />+91 99522 22362</p>
               </div>
               
               <div className="flex items-center gap-4">
                 <Mail className="w-6 h-6 text-primary shrink-0" />
-                <p className="text-muted-foreground">hello@advertexmedia.com</p>
+                <p className="text-muted-foreground">advertexdigital01@gmail.com</p>
               </div>
             </div>
           </div>
@@ -42,9 +42,6 @@ export default function ContactPage() {
             <div className="flex gap-4">
               <a href="#" className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all font-bold text-xs">
                 IG
-              </a>
-              <a href="#" className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all font-bold text-xs">
-                IN
               </a>
               <a href="#" className="w-12 h-12 rounded-full bg-white/5 border border-white/10 flex items-center justify-center hover:bg-primary hover:text-primary-foreground hover:border-primary transition-all font-bold text-xs">
                 FB
