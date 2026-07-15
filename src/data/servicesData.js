@@ -33,6 +33,10 @@ export const servicesData = [
     id: "video-production",
     title: "Video Production",
     image: "https://images.unsplash.com/photo-1579621970588-a35d0e7ab9b6?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80",
-    items: ["Drone Cam", "Reels", "Short film making"]
+    items: [
+      { name: "Drone Cam", description: "Capture breathtaking aerial footage that provides a unique perspective and elevates the production value of your brand's visual content." },
+      { name: "Reels", description: "Engaging, fast-paced short-form video content specifically optimized for social media platforms to maximize reach, engagement, and virality." },
+      { name: "Short film making", description: "Cinematic storytelling that brings your brand's narrative to life through high-quality production, professional directing, and expert editing." }
+    ]
   }
 ];

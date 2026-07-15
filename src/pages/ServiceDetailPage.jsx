@@ -63,19 +63,32 @@ export default function ServiceDetailPage() {
           
           <div className="w-full md:w-2/3">
             <div className="grid grid-cols-1 sm:grid-cols-2 gap-6">
-              {service.items.map((item, i) => (
-                <motion.div 
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
-                  viewport={{ once: true }}
-                  transition={{ delay: i * 0.05 }}
-                  key={i} 
-                  className="flex items-center gap-4 bg-white/5 p-6 rounded-2xl border border-white/10 hover:border-primary/50 hover:bg-white/10 transition-all group"
-                >
-                  <CheckCircle2 className="w-6 h-6 text-primary shrink-0 group-hover:scale-110 transition-transform" />
-                  <span className="font-bold text-foreground text-lg">{item}</span>
-                </motion.div>
-              ))}
+              {service.items.map((item, i) => {
+                const isObject = typeof item === 'object' && item !== null;
+                const name = isObject ? item.name : item;
+                const description = isObject ? item.description : null;
+                
+                return (
+                  <motion.div 
+                    initial={{ opacity: 0, y: 20 }}
+                    whileInView={{ opacity: 1, y: 0 }}
+                    viewport={{ once: true }}
+                    transition={{ delay: i * 0.05 }}
+                    key={i} 
+                    className="flex flex-col gap-3 bg-white/5 p-6 rounded-2xl border border-white/10 hover:border-primary/50 hover:bg-white/10 transition-all group"
+                  >
+                    <div className="flex items-center gap-4">
+                      <CheckCircle2 className="w-6 h-6 text-primary shrink-0 group-hover:scale-110 transition-transform" />
+                      <span className="font-bold text-foreground text-lg">{name}</span>
+                    </div>
+                    {description && (
+                      <p className="text-muted-foreground ml-10 text-sm leading-relaxed">
+                        {description}
+                      </p>
+                    )}
+                  </motion.div>
+                );
+              })}
             </div>
           </div>
         </div>

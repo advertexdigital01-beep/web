@@ -258,7 +258,7 @@ function ServicesSection() {
                      >
                        <div className="pb-8 pr-12">
                          <p className="text-muted-foreground text-lg mb-6 leading-relaxed">
-                           We help shape your brand from the ground up. This includes {service.items.slice(0, 4).join(", ").toLowerCase()}, and more to keep your brand consistent and recognizable across all touchpoints.
+                           We help shape your brand from the ground up. This includes {service.items.map(item => typeof item === 'object' ? item.name : item).slice(0, 4).join(", ").toLowerCase()}, and more to keep your brand consistent and recognizable across all touchpoints.
                          </p>
                          <Link to={`/services/${service.id}`} className="inline-flex items-center gap-2 text-sm font-bold text-foreground hover:text-primary transition-colors border-b border-transparent hover:border-primary pb-1">
                            Know More <ArrowUpRight className="w-4 h-4" />
