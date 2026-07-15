@@ -102,7 +102,7 @@ function HeroSection() {
   }, []);
 
   return (
-    <section className="relative min-h-screen flex items-center md:items-end bg-hero-bg overflow-hidden">
+    <section className="relative md:min-h-screen flex flex-col justify-start md:justify-end bg-hero-bg overflow-hidden">
       {/* Spline 3D Background */}
       <div className="absolute inset-0 pointer-events-none">
         {!isMobile ? (
@@ -126,7 +126,7 @@ function HeroSection() {
       <div className="absolute inset-0 bg-black/30 z-[1] pointer-events-none" />
       
       {/* Content container */}
-      <div className="relative z-10 pointer-events-none w-full max-w-[100%] sm:max-w-md lg:max-w-2xl px-6 md:px-10 pb-12 md:pb-10 pt-24 md:pt-32">
+      <div className="relative z-10 pointer-events-none w-full max-w-[100%] sm:max-w-md lg:max-w-2xl px-6 md:px-10 pb-16 md:pb-10 pt-32 md:pt-32">
         
         <h1 
           className="text-[clamp(1.5rem,9vw,6rem)] font-bold leading-[1.05] tracking-tighter md:tracking-[-0.05em] text-foreground mb-2 md:mb-4 uppercase opacity-0 animate-fade-up whitespace-nowrap md:whitespace-normal"
