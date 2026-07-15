@@ -222,8 +222,29 @@ function ServicesSection() {
   const [openIndex, setOpenIndex] = React.useState(0);
 
   return (
-    <section id="services" className="py-24 md:py-32 px-6 md:px-16 bg-white relative">
-      <div className="max-w-4xl mx-auto">
+    <section id="services" className="py-24 md:py-32 px-6 md:px-16 bg-white relative overflow-hidden">
+      {/* Background Layer: Liquid Glass Theme */}
+      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
+        {/* Top-left layered gradient glow */}
+        <div className="absolute top-[-5%] left-[-10%] w-[80vw] md:w-[40vw] h-[80vw] md:h-[40vw] bg-[#60B1FF] rounded-full mix-blend-multiply filter blur-2xl md:blur-3xl opacity-30 md:opacity-20 transform-gpu" />
+        <div className="absolute top-[10%] left-[5%] w-[60vw] md:w-[30vw] h-[60vw] md:h-[30vw] bg-[#319AFF] rounded-full mix-blend-multiply filter blur-2xl md:blur-3xl opacity-30 md:opacity-20 transform-gpu" />
+        
+        {/* The Glassy Orb */}
+        <div className="hidden md:block absolute top-[20%] left-1/2 -translate-x-1/2 md:top-1/2 md:-translate-y-1/2 md:left-auto md:-translate-x-0 md:right-[-5%] w-[140vw] md:w-[50vw] mix-blend-multiply pointer-events-none opacity-50 md:opacity-80">
+          <video
+            autoPlay
+            loop
+            muted
+            playsInline
+            className="w-full h-auto scale-100 md:scale-125 origin-center transform-gpu"
+            style={{ filter: 'invert(1) hue-rotate(160deg) saturate(200%) brightness(1.1)' }}
+          >
+            <source src="https://future.co/images/homepage/glassy-orb/orb-purple.webm" type="video/webm" />
+          </video>
+        </div>
+      </div>
+
+      <div className="max-w-4xl mx-auto relative z-10">
         <div className="text-center mb-16 md:mb-24">
           <p className="text-primary font-bold uppercase tracking-widest text-sm mb-4">Our Core Services</p>
           <h2 className="text-4xl md:text-6xl font-bold text-slate-900 tracking-tighter">
