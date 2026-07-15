@@ -222,29 +222,29 @@ function ServicesSection() {
   const [openIndex, setOpenIndex] = React.useState(0);
 
   return (
-    <section id="services" className="py-24 md:py-32 px-6 md:px-16 bg-hero-bg relative">
+    <section id="services" className="py-24 md:py-32 px-6 md:px-16 bg-white relative">
       <div className="max-w-4xl mx-auto">
         <div className="text-center mb-16 md:mb-24">
           <p className="text-primary font-bold uppercase tracking-widest text-sm mb-4">Our Core Services</p>
-          <h2 className="text-4xl md:text-6xl font-bold text-foreground tracking-tighter">
+          <h2 className="text-4xl md:text-6xl font-bold text-slate-900 tracking-tighter">
             Create. Connect. Convert.
           </h2>
         </div>
 
-        <div className="border-t border-white/10">
+        <div className="border-t border-slate-200">
           {servicesData.map((service, index) => {
              const isOpen = openIndex === index;
              return (
-               <div key={index} className="border-b border-white/10">
+               <div key={index} className="border-b border-slate-200">
                  <button 
                    onClick={() => setOpenIndex(isOpen ? -1 : index)}
                    className="w-full py-8 flex items-center justify-between text-left group"
                  >
-                   <h3 className={`text-2xl md:text-4xl font-bold transition-colors ${isOpen ? 'text-primary' : 'text-foreground group-hover:text-primary/70'}`}>
+                   <h3 className={`text-2xl md:text-4xl font-bold transition-colors ${isOpen ? 'text-primary' : 'text-slate-900 group-hover:text-primary/70'}`}>
                      {service.title}
                    </h3>
-                   <div className="text-foreground opacity-50 group-hover:opacity-100 transition-opacity">
-                     {isOpen ? <ChevronUp className="w-8 h-8" /> : <ChevronDown className="w-8 h-8" />}
+                   <div className="text-slate-400 group-hover:text-slate-900 transition-colors">
+                     {isOpen ? <ChevronUp className="w-8 h-8 text-primary" /> : <ChevronDown className="w-8 h-8" />}
                    </div>
                  </button>
                  
@@ -257,10 +257,10 @@ function ServicesSection() {
                        className="overflow-hidden"
                      >
                        <div className="pb-8 pr-12">
-                         <p className="text-muted-foreground text-lg mb-6 leading-relaxed">
+                         <p className="text-slate-600 text-lg mb-6 leading-relaxed">
                            We help shape your brand from the ground up. This includes {service.items.map(item => typeof item === 'object' ? item.name : item).slice(0, 4).join(", ").toLowerCase()}, and more to keep your brand consistent and recognizable across all touchpoints.
                          </p>
-                         <Link to={`/services/${service.id}`} className="inline-flex items-center gap-2 text-sm font-bold text-foreground hover:text-primary transition-colors border-b border-transparent hover:border-primary pb-1">
+                         <Link to={`/services/${service.id}`} className="inline-flex items-center gap-2 text-sm font-bold text-slate-900 hover:text-primary transition-colors border-b border-transparent hover:border-primary pb-1">
                            Know More <ArrowUpRight className="w-4 h-4" />
                          </Link>
                        </div>
