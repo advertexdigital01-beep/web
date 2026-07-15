@@ -158,11 +158,16 @@ function HeroSection() {
             />
           </Suspense>
         ) : (
-          <div className="absolute inset-0 bg-[#0a0a0a] overflow-hidden flex items-center justify-center">
-            {/* Extremely lightweight CSS animation for mobile */}
-            <div className="absolute top-[10%] left-[5%] w-[70vw] h-[70vw] bg-green-500/20 rounded-full filter blur-[80px] animate-blob" />
-            <div className="absolute top-[40%] right-[5%] w-[60vw] h-[60vw] bg-blue-500/20 rounded-full filter blur-[80px] animate-blob" style={{ animationDelay: '2s' }} />
-            <div className="absolute bottom-[10%] left-[20%] w-[80vw] h-[80vw] bg-purple-500/20 rounded-full filter blur-[80px] animate-blob" style={{ animationDelay: '4s' }} />
+          <div className="absolute inset-0 bg-[#0a0a0a] overflow-hidden">
+            <video
+              autoPlay
+              loop
+              muted
+              playsInline
+              className="absolute inset-0 w-full h-full object-cover opacity-60"
+            >
+              <source src="https://d8j0ntlcm91z4.cloudfront.net/user_38xzZboKViGWJOttwIXH07lWA1P/hf_20260307_083826_e938b29f-a43a-41ec-a153-3d4730578ab8.mp4" type="video/mp4" />
+            </video>
           </div>
         )}
       </div>
