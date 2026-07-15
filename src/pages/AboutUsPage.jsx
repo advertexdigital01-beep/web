@@ -34,7 +34,44 @@ export default function AboutUsPage() {
         <div className="relative">
           <div className="aspect-square bg-muted/20 rounded-[32px] border border-white/10 overflow-hidden relative group">
             <div className="absolute inset-0 bg-gradient-to-tr from-primary/20 to-transparent mix-blend-overlay" />
-            <img src="https://images.unsplash.com/photo-1522071820081-009f0129c71c?ixlib=rb-4.0.3&auto=format&fit=crop&w=800&q=80" alt="Team collaborating" className="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
+            <img src="https://images.unsplash.com/photo-1600880292203-757bb62b4baf?ixlib=rb-4.0.3&auto=format&fit=crop&w=1200&q=80" alt="Creative team collaborating" className="w-full h-full object-cover opacity-60 grayscale group-hover:grayscale-0 group-hover:scale-105 transition-all duration-700" />
+          </div>
+        </div>
+      </div>
+
+      {/* New Content Section */}
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-12 mb-24 border-t border-white/10 pt-16">
+        <div className="bg-white/5 p-10 rounded-3xl border border-white/10">
+          <h3 className="text-2xl font-bold uppercase tracking-widest mb-4">Our Mission</h3>
+          <div className="w-12 h-1 bg-primary mb-6"></div>
+          <p className="text-muted-foreground text-lg leading-relaxed">
+            To empower brands by providing innovative, data-driven, and highly creative marketing solutions. We believe in crafting stories that resonate and building digital ecosystems that generate measurable growth. Every campaign we launch is designed to leave a lasting impact on your audience.
+          </p>
+        </div>
+        <div className="bg-white/5 p-10 rounded-3xl border border-white/10">
+          <h3 className="text-2xl font-bold uppercase tracking-widest mb-4">Our Vision</h3>
+          <div className="w-12 h-1 bg-primary mb-6"></div>
+          <p className="text-muted-foreground text-lg leading-relaxed">
+            To be the world's most sought-after creative agency, recognized for pushing the limits of technology and design. We envision a future where brand interactions are seamless, immersive, and fundamentally human—bridging the gap between businesses and consumers through authentic digital experiences.
+          </p>
+        </div>
+      </div>
+
+      {/* Core Values */}
+      <div className="mb-24">
+        <h2 className="text-3xl md:text-4xl font-bold uppercase tracking-tighter mb-12 text-center">Our Core <span className="text-primary">Values</span></h2>
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+          <div className="border border-white/10 p-8 rounded-2xl hover:border-primary/50 transition-colors bg-white/5">
+            <h4 className="text-xl font-bold mb-4 uppercase tracking-widest">Innovation</h4>
+            <p className="text-muted-foreground font-light">We constantly explore new technologies and design paradigms to stay ahead of the curve and offer cutting-edge solutions.</p>
+          </div>
+          <div className="border border-white/10 p-8 rounded-2xl hover:border-primary/50 transition-colors bg-white/5">
+            <h4 className="text-xl font-bold mb-4 uppercase tracking-widest">Transparency</h4>
+            <p className="text-muted-foreground font-light">Honesty and open communication form the bedrock of our client relationships. We keep you informed at every step.</p>
+          </div>
+          <div className="border border-white/10 p-8 rounded-2xl hover:border-primary/50 transition-colors bg-white/5">
+            <h4 className="text-xl font-bold mb-4 uppercase tracking-widest">Excellence</h4>
+            <p className="text-muted-foreground font-light">We don't settle for "good enough." Our team is dedicated to delivering premium, flawless execution across all projects.</p>
           </div>
         </div>
       </div>
