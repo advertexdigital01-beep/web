@@ -20,6 +20,7 @@ import AdminLogin from "./AdminLogin";
 import AdminDashboard from "./AdminDashboard";
 import ProtectedRoute from "./components/ProtectedRoute";
 import ServicesPage from "./pages/ServicesPage";
+import ServiceDetailPage from "./pages/ServiceDetailPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import ContactPage from "./pages/ContactPage";
 import AboutUsPage from "./pages/AboutUsPage";
@@ -728,6 +729,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/services" element={<Layout><ServicesPage /></Layout>} />
+        <Route path="/services/:id" element={<Layout><ServiceDetailPage /></Layout>} />
         <Route path="/about-us" element={<Layout><AboutUsPage /></Layout>} />
         <Route path="/projects" element={<Layout><ProjectsPage /></Layout>} />
         <Route path="/contacts" element={<Layout><ContactPage /></Layout>} />
