@@ -22,6 +22,7 @@ import ProtectedRoute from "./components/ProtectedRoute";
 import ServicesPage from "./pages/ServicesPage";
 import ProjectsPage from "./pages/ProjectsPage";
 import ContactPage from "./pages/ContactPage";
+import AboutUsPage from "./pages/AboutUsPage";
 
 const Spline = React.lazy(() => import('@splinetool/react-spline'));
 
@@ -73,7 +74,7 @@ function Navbar() {
       </div>
 
       <div className="hidden md:flex gap-8 items-center mr-8">
-        {["Home", "Services", "Projects", "Contacts"].map((item) => (
+        {["Home", "Services", "About Us", "Contacts"].map((item) => (
           <Link
             key={item}
             to={item === "Home" ? "/" : `/${item.toLowerCase().replace(' ', '-')}`}
@@ -401,7 +402,7 @@ function FooterSection() {
 }
 
 // --- SCROLL ANIMATION COMPONENTS ---
-const AnimatedText = ({ text, className }) => {
+export const AnimatedText = ({ text, className }) => {
   const ref = useRef(null);
   const isInView = useInView(ref, { once: true, margin: "-5%" });
 
@@ -684,6 +685,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<HomePage />} />
         <Route path="/services" element={<Layout><ServicesPage /></Layout>} />
+        <Route path="/about-us" element={<Layout><AboutUsPage /></Layout>} />
         <Route path="/projects" element={<Layout><ProjectsPage /></Layout>} />
         <Route path="/contacts" element={<Layout><ContactPage /></Layout>} />
         <Route path="/work" element={<Layout><ProjectsPage /></Layout>} />
