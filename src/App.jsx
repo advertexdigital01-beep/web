@@ -6,7 +6,7 @@ import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
 import { motion, useInView } from "framer-motion";
 import { ReactLenis } from "lenis/react";
-import { ChevronLeftIcon, ChevronRightIcon } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, Menu, X } from "lucide-react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { Autoplay, EffectCoverflow, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -67,24 +67,67 @@ const Button = React.forwardRef(({ className, variant, size, ...props }, ref) =>
 Button.displayName = "Button"
 
 function Navbar() {
-  return (
-    <nav className="absolute top-0 left-0 right-0 z-50 flex justify-between px-6 lg:px-16 py-5 items-center">
-      <div className="flex items-center -ml-2 md:-ml-4">
-        <img src="/logo.png" alt="Advertex Media Logo" className="h-16 md:h-24 w-auto object-contain drop-shadow-lg hover:scale-105 transition-transform invert brightness-200" />
-      </div>
+  const [isMobileMenuOpen, setIsMobileMenuOpen] = React.useState(false);
 
-      <div className="hidden md:flex gap-8 items-center mr-8">
-        {["Home", "Services", "About Us", "Contacts"].map((item) => (
-          <Link
-            key={item}
-            to={item === "Home" ? "/" : `/${item.toLowerCase().replace(' ', '-')}`}
-            className="text-sm text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest"
+  return (
+    <>
+      <nav className="absolute top-0 left-0 right-0 z-50 flex justify-between px-6 lg:px-16 py-5 items-center">
+        <div className="flex items-center -ml-2 md:-ml-4">
+          <img src="/logo.png" alt="Advertex Media Logo" className="h-16 md:h-24 w-auto object-contain drop-shadow-lg hover:scale-105 transition-transform invert brightness-200" />
+        </div>
+
+        {/* Desktop Menu */}
+        <div className="hidden md:flex gap-8 items-center mr-8">
+          {["Home", "Services", "About Us", "Contacts"].map((item) => (
+            <Link
+              key={item}
+              to={item === "Home" ? "/" : `/${item.toLowerCase().replace(' ', '-')}`}
+              className="text-sm text-muted-foreground hover:text-foreground transition-colors uppercase tracking-widest"
+            >
+              {item}
+            </Link>
+          ))}
+        </div>
+
+        {/* Mobile Menu Toggle */}
+        <div className="md:hidden">
+          <button 
+            onClick={() => setIsMobileMenuOpen(true)}
+            className="text-white p-2 hover:bg-white/10 rounded-lg transition-colors"
           >
-            {item}
-          </Link>
-        ))}
-      </div>
-    </nav>
+            <Menu className="w-8 h-8" />
+          </button>
+        </div>
+      </nav>
+
+      {/* Mobile Menu Overlay */}
+      {isMobileMenuOpen && (
+        <div className="fixed inset-0 z-[60] bg-background/95 backdrop-blur-xl flex flex-col px-6 py-8">
+          <div className="flex justify-between items-center mb-16">
+            <img src="/logo.png" alt="Advertex Media Logo" className="h-16 w-auto object-contain drop-shadow-lg invert brightness-200" />
+            <button 
+              onClick={() => setIsMobileMenuOpen(false)}
+              className="text-white p-2 hover:bg-white/10 rounded-lg transition-colors"
+            >
+              <X className="w-8 h-8" />
+            </button>
+          </div>
+          
+          <div className="flex flex-col gap-8 items-start pl-4">
+            {["Home", "Services", "About Us", "Contacts"].map((item) => (
+              <Link
+                key={item}
+                to={item === "Home" ? "/" : `/${item.toLowerCase().replace(' ', '-')}`}
+                onClick={() => setIsMobileMenuOpen(false)}
+                className="text-3xl font-bold text-foreground hover:text-primary transition-colors uppercase tracking-tighter"
+              >
+                {item}
+              </Link>
+            ))}
+          </div>
+        </div>
+      )}
+    </>
   );
 }
 
