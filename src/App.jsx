@@ -4,9 +4,9 @@ import { db } from './lib/firebase';
 import { cva } from 'class-variance-authority';
 import clsx from 'clsx';
 import { twMerge } from 'tailwind-merge';
-import { motion, useInView } from "framer-motion";
+import { motion, useInView, AnimatePresence } from "framer-motion";
 import { ReactLenis } from "lenis/react";
-import { ChevronLeftIcon, ChevronRightIcon, Menu, X } from "lucide-react";
+import { ChevronLeftIcon, ChevronRightIcon, Menu, X, ChevronDown, ChevronUp, ArrowUpRight } from "lucide-react";
 import { BrowserRouter, Routes, Route, Link } from "react-router-dom";
 import { Autoplay, EffectCoverflow, Navigation, Pagination } from "swiper/modules";
 import { Swiper, SwiperSlide } from "swiper/react";
@@ -217,88 +217,58 @@ function HeroSection() {
   );
 }
 
-const servicesData = [
-  {
-    title: "Digital Marketing",
-    items: ["Digital Strategy", "Social Media Marketing", "Campaign Management", "Influencer Marketing", "Media Planning and Buying", "Search Engine Optimization", "Google Ads / Meta Ads", "Lead Generation", "Whatsapp Promotion"]
-  },
-  {
-    title: "Web Design",
-    items: ["UI/UX Design", "Website Development", "E-Commerce", "Website Maintenance", "Website Copy", "Web Apps and Portals", "Third-Party Integrations", "Widgets", "Server Management"]
-  },
-  {
-    title: "Design Services",
-    items: ["Flyers", "Poster", "Brochures", "Logos", "Calendar & Dairy's", "Promotional Products", "Copy Writing", "Event Designs", "Special day Designs"]
-  },
-  {
-    title: "Print Media",
-    items: ["News Paper", "Magazines", "Flyers", "Brochures"]
-  },
-  {
-    title: "Content Marketing",
-    items: ["Content Research", "Content Strategy", "Social Media Content", "SEO-based Writing", "Internal Communication", "Long Format Writing", "Websites, PPTs, Investor Decks", "Editing and Proofing"]
-  },
-  {
-    title: "Video Production",
-    items: ["Product Photoshoots", "Explanatory Videos", "Animated Videos", "Reels/Shorts", "Inaugural Shoots", "Events Shoots/Teasers", "360 degree office shoots", "Interviews", "Social Media Gifs"]
-  },
-  {
-    title: "Outdoor - Media",
-    items: ["Bill Boards/Hoardings", "Bus Shelters", "Railway stations", "Medians", "Traffic Barricades", "Gas Ballon", "Pole Brandings", "No Parking Board", "Flyer Distribution"]
-  },
-  {
-    title: "Out of Home",
-    items: ["Digital Screens", "Theater Advertising", "Mall Advertising", "Look Walkers"]
-  }
-];
-
 function ServicesSection() {
-  return (
-    <section id="services" className="py-24 px-6 md:px-16 relative overflow-hidden bg-white">
-      {/* Background Layer: Liquid Glass Theme */}
-      <div className="absolute inset-0 z-0 overflow-hidden pointer-events-none">
-        {/* Top-left layered gradient glow (Optimized blurs) */}
-        <div className="absolute top-[-5%] left-[-10%] w-[80vw] md:w-[40vw] h-[80vw] md:h-[40vw] bg-[#60B1FF] rounded-full mix-blend-multiply filter blur-2xl md:blur-3xl opacity-30 md:opacity-20 transform-gpu" />
-        <div className="absolute top-[10%] left-[5%] w-[60vw] md:w-[30vw] h-[60vw] md:h-[30vw] bg-[#319AFF] rounded-full mix-blend-multiply filter blur-2xl md:blur-3xl opacity-30 md:opacity-20 transform-gpu" />
-        
-        {/* The Glassy Orb - Hidden on mobile for performance */}
-        <div className="hidden md:block absolute top-[20%] left-1/2 -translate-x-1/2 md:top-1/2 md:-translate-y-1/2 md:left-auto md:-translate-x-0 md:right-[-5%] w-[140vw] md:w-[50vw] mix-blend-multiply pointer-events-none opacity-50 md:opacity-80">
-          <video
-            autoPlay
-            loop
-            muted
-            playsInline
-            className="w-full h-auto scale-100 md:scale-125 origin-center transform-gpu"
-            style={{ filter: 'invert(1) hue-rotate(160deg) saturate(200%) brightness(1.1)' }}
-          >
-            <source src="https://future.co/images/homepage/glassy-orb/orb-purple.webm" type="video/webm" />
-          </video>
-        </div>
-      </div>
+  const [openIndex, setOpenIndex] = React.useState(0);
 
-      <div className="max-w-7xl mx-auto relative z-20">
-        <h2 className="text-4xl md:text-5xl font-bold mb-16 text-slate-900 uppercase tracking-tight flex flex-wrap gap-x-[0.3em]">
-          <AnimatedText text="Our" />
-          <AnimatedText text="Services" className="text-[#0084ff]" />
-        </h2>
-        
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
-          {servicesData.map((category, idx) => (
-            <div key={idx} className="bg-white/40 backdrop-blur-[50px] border border-slate-200 p-8 rounded-[16px] hover:bg-white/60 transition-colors shadow-[0_8px_32px_rgba(0,0,0,0.04)] shadow-inner-[inset_0px_4px_4px_0px_rgba(255,255,255,0.25)]">
-              <h3 className="text-xl font-semibold mb-6 text-slate-900 flex items-center gap-3">
-                <span className="w-2 h-2 rounded-full bg-[#0084ff] shadow-[0_0_8px_rgba(0,132,255,0.5)]" />
-                {category.title}
-              </h3>
-              <ul className="space-y-3">
-                {category.items.map((item, i) => (
-                  <li key={i} className="text-sm text-slate-600 font-medium hover:text-slate-900 transition-colors flex items-start gap-2">
-                    <span className="text-[#0084ff] mt-1 opacity-60">›</span>
-                    {item}
-                  </li>
-                ))}
-              </ul>
-            </div>
-          ))}
+  return (
+    <section id="services" className="py-24 md:py-32 px-6 md:px-16 bg-hero-bg relative">
+      <div className="max-w-4xl mx-auto">
+        <div className="text-center mb-16 md:mb-24">
+          <p className="text-primary font-bold uppercase tracking-widest text-sm mb-4">Our Core Services</p>
+          <h2 className="text-4xl md:text-6xl font-bold text-foreground tracking-tighter">
+            Create. Connect. Convert.
+          </h2>
+        </div>
+
+        <div className="border-t border-white/10">
+          {servicesData.map((service, index) => {
+             const isOpen = openIndex === index;
+             return (
+               <div key={index} className="border-b border-white/10">
+                 <button 
+                   onClick={() => setOpenIndex(isOpen ? -1 : index)}
+                   className="w-full py-8 flex items-center justify-between text-left group"
+                 >
+                   <h3 className={`text-2xl md:text-4xl font-bold transition-colors ${isOpen ? 'text-primary' : 'text-foreground group-hover:text-primary/70'}`}>
+                     {service.title}
+                   </h3>
+                   <div className="text-foreground opacity-50 group-hover:opacity-100 transition-opacity">
+                     {isOpen ? <ChevronUp className="w-8 h-8" /> : <ChevronDown className="w-8 h-8" />}
+                   </div>
+                 </button>
+                 
+                 <AnimatePresence>
+                   {isOpen && (
+                     <motion.div 
+                       initial={{ height: 0, opacity: 0 }}
+                       animate={{ height: "auto", opacity: 1 }}
+                       exit={{ height: 0, opacity: 0 }}
+                       className="overflow-hidden"
+                     >
+                       <div className="pb-8 pr-12">
+                         <p className="text-muted-foreground text-lg mb-6 leading-relaxed">
+                           We help shape your brand from the ground up. This includes {service.items.slice(0, 4).join(", ").toLowerCase()}, and more to keep your brand consistent and recognizable across all touchpoints.
+                         </p>
+                         <Link to={`/services/${service.id}`} className="inline-flex items-center gap-2 text-sm font-bold text-foreground hover:text-primary transition-colors border-b border-transparent hover:border-primary pb-1">
+                           Know More <ArrowUpRight className="w-4 h-4" />
+                         </Link>
+                       </div>
+                     </motion.div>
+                   )}
+                 </AnimatePresence>
+               </div>
+             )
+          })}
         </div>
       </div>
     </section>
